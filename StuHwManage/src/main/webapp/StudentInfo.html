@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/vue.js"></script>
+    <script src="js/axios-0.18.0.js"></script>
+    <script src="element-ui/lib/index.js"></script>
+    <link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+</head>
+<body>
+<div id="app">
+    <template>
+        <el-row>
+            <el-button type="primary" @click="resetStatus" round>重置状态</el-button>
+        </el-row>
+        <el-table
+                :data="tableData"
+                style="width: 100%"
+        >
+            <el-table-column
+                    prop="id"
+                    label="ID"
+                    align="center"
+            >
+            </el-table-column>
+            <el-table-column
+                    label="姓名"
+                    align="center"
+                    >
+                <template slot-scope="scope">
+                        <div slot="reference" class="name-wrapper">
+                            <el-tag size="medium">{{ scope.row.name}}</el-tag>
+                        </div>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    label="账号"
+                    align="center"
+            >
+                <template slot-scope="scope">
+                    <div slot="reference" class="name-wrapper">
+                        <el-tag size="medium" effect="plain">{{ scope.row.username}}</el-tag>
+                    </div>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    label="密码"
+                    align="center"
+            >
+                <template slot-scope="scope">
+                    <el-tag size="medium" effect="plain">{{ scope.row.password}}</el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    label="状态"
+                    align="center"
+            >
+                <template slot-scope="scope">
+                    <el-tag size="medium" effect="plain">{{ scope.row.statusStr}}</el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column label="操作">
+                <template slot-scope="scope">
+                    <el-button @click="UpDate(scope.row.id, scope.row)"  type="primary" plain>修改</el-button>
+                    <el-dialog
+                            title="修改信息"
+                            :visible.sync="dialogVisible"
+                            width="30%"
+                            >
+                        <el-form ref="form" label-width="80px" :model="formLabelAlign">
+                            <el-form-item label="姓名">
+                                <el-input v-model="formLabelAlign.name"></el-input>
+                            </el-form-item>
+                            <el-form-item label="账号">
+                                <el-input v-model="formLabelAlign.username"></el-input>
+                            </el-form-item>
+                            <el-form-item label="密码">
+                                <el-input v-model="formLabelAlign.password"></el-input>
+                            </el-form-item>
+                            <el-form-item>
+                                <el-button type="primary" @click="AlterInfo">提交</el-button>
+                                <el-button @click="dialogVisible=false">取消</el-button>
+                            </el-form-item>
+                        </el-form>
+                    </el-dialog>
+                </template>
+            </el-table-column>
+        </el-table>
+    </template>
+</div>
+</body>
+<script>
+    new Vue({
+        el:"#app",
+        data(){
+            return{
+                //表格数据
+                tableData: [],
+                //用户信息
+                userInfo:{},
+                //是否隐藏对话框
+                dialogVisible: false,
+                //对话框
+                labelPosition: 'right',
+                formLabelAlign: {
+                    id:'',
+                    name: '',
+                    username: '',
+                    password: ''
+                }
+            }
+        },
+        mounted(){
+            //当页面加载完成后发送异步请求，获取数据
+            this.selectAll();
+        },
+        methods:{
+            //重置状态
+            resetStatus(){
+                axios({
+                    method:"get",
+                    url:"http://localhost:8080/StuHwManage/Hw/resetStatus"
+                }).then(resp=>{
+                    if (resp.data=="success"){
+                        this.selectAll();
+                        this.$message({
+                            message: '重置成功!',
+                            type: 'success'
+                        });
+                    }
+                })
+            },
+            //打开对话框
+            UpDate(index,row){
+                this.dialogVisible=true;
+                this.formLabelAlign.id=index;
+            },
+            //发送修改信息
+            AlterInfo(){
+                this.dialogVisible=false;
+                axios({
+                    method:"post",
+                    url:"http://localhost:8080/StuHwManage/Hw/updateUser",
+                    data:this.formLabelAlign
+                }).then(resp=>{
+                    if (resp.data=="success"){
+                        this.selectAll();
+                        this.$message({
+                            message: '修改成功!',
+                            type: 'success'
+                        });
+
+                    }
+                })
+            },
+            //对话框确认关闭
+            handleClose(done) {
+                this.$confirm('确认关闭？')
+                    .then(_ => {
+                        done();
+                    })
+                    .catch(_ => {});
+            },
+            selectAll(){
+                //当页面加载完成后发送异步请求，获取数据
+                axios({
+                    method:"post",
+                    url:"http://localhost:8080/StuHwManage/Hw/FindAllUser",
+                }).then(resp=>{
+                    //这里的this代表就是vue的
+                    this.tableData = resp.data;//{rows:[]}
+
+                })
+            },
+            handleEdit(index, row) {
+                console.log(index,row);
+            },
+            handleDelete(index, row) {
+                console.log(index, row);
+            }
+        }
+    })
+</script>
+</html>

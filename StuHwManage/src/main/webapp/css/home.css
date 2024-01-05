@@ -1,0 +1,27 @@
+.tableC1{
+text-align: right;
+}
+.tableC2{
+    text-align: left;
+}
+.site-demo-active{
+    padding-right: 50px;
+}
+#time{
+    padding-left:250px;
+    float:right;
+    font-size:14px;
+    font-style: italic;
+    font-weight: bolder;
+}
+a,img{border:0;}
+.scrollText:hover{
+    text-decoration-line: underline;
+}
+#scrollWrap{
+    width:350px;
+    height:18px;
+    overflow:hidden;
+    margin-top: 20px;
+}
+#scrollMsg li{height:18px;font-weight: bolder; font-style: italic;line-height:18px;overflow:hidden;font-size:12px;padding:0 10px;}

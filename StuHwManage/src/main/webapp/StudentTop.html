@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="js/vue.js"></script>
+		<script src="js/axios-0.18.0.js"></script>
+		<script src="element-ui/lib/index.js"></script>
+		<link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+		<link rel="shortcut icon" href="./img/favicon.ico" type="image/x-icon" />
+		<style type="text/css">
+			*{
+				margin: 0;
+				padding: 0;
+			}
+			.bx{
+				height: 60px;
+				width: 100%;
+				background: #177ec1;
+			}
+			.bx .container{
+				margin: 0 60px;
+				overflow: hidden;
+			}
+			.bx .container .left{
+				width: 201px;
+				height: 43px;
+				padding-top: 19px;
+				color: #FFFFFF;
+				font-size: 24px;
+				float: left;
+			}
+			.bx .container .right{
+				overflow: hidden;
+				width: 124px;
+				padding-top: 19px;
+				float: right;
+			}
+			.bx .container .right span{
+				font-size: 16px;
+				color: #fff;
+			}
+			.bx .container .right .l{
+				float: left;
+			}
+			.bx .container .right .r{
+				float: right;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="bx" id="app">
+			<div class="container">
+				<h2 class="left">管理员系统</h2>
+				<div class="right">
+					<a href="#" id="logout" @click="loginOut">退出登录</a>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script>
+		new Vue({
+			el:"#app",
+			methods:{
+				//退出登录
+				loginOut(){
+					axios({
+						method:"get",
+						url:"http://localhost:8080/StuHwManage/Hw/loginOut"
+					})
+					this.$message('退出登录');
+				},
+			}
+		})
+	</script>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>提交作业</title>
+    <script src="js/vue.js"></script>
+    <script src="js/axios-0.18.0.js"></script>
+    <script src="element-ui/lib/index.js"></script>
+    <link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+    <link rel="shortcut icon" href="./img/favicon.ico" type="image/x-icon" />
+    <style>
+        .avatar-uploader .el-upload {
+            border: 1px dashed #d9d9d9;
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .avatar-uploader .el-upload:hover {
+            border-color: #409EFF;
+        }
+        .avatar-uploader-icon {
+            font-size: 28px;
+            color: #8c939d;
+            width: 178px;
+            height: 178px;
+            line-height: 178px;
+            text-align: center;
+        }
+        .avatar {
+            width: 230px;
+            height: 170px;
+            display: block;
+            border-style: double;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <el-upload
+            name="file"
+            class="avatar-uploader"
+            action="http://localhost:8080/StuHwManage/Hw/FileUp"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload">
+        <img src="img/upload.jpg" class="avatar">
+    </el-upload>
+</div>
+</body>
+<script>
+    new Vue({
+        el:"#app",
+        data() {
+            return {
+                imageUrl: '',
+                userInfo:{}
+            };
+        },
+        methods: {
+            handleAvatarSuccess(res, file) {
+                this.imageUrl = URL.createObjectURL(file.raw);
+            },
+            GetUserInfo(){
+                axios({
+                    method:"get",
+                    url:"http://localhost:8080/StuHwManage/Hw/FindUser"
+                }).then(resp=>{
+                    axios({
+                        method:"post",
+                        url:"http://localhost:8080/StuHwManage/Hw/ChangeStatus",
+                        data:{"id":resp.data.id}
+                    })
+                })
+            },
+            beforeAvatarUpload(file) {
+                // console.log(file.type)
+                const isJPG = file.type === ('image/jpg')||('image/jpeg')||('image/png')||('application/vnd.openxmlformats-officedocument.wordprocessingml.document')||('text/plain');
+                const isLt2M = file.size / 1024 / 1024 < 2;
+
+                if (!isJPG) {
+                    this.$message.error('上传文件只能是 JPG,jpeg，PNG,txt,docx 格式!');
+                }
+                if (!isLt2M) {
+                    this.$message.error('上传头像图片大小不能超过 2MB!');
+                }
+                if(isJPG&&isLt2M){
+                    this.$message({
+                        message: '上传成功!',
+                        type: 'success'
+                    });
+                    this.GetUserInfo();
+                }
+                return isJPG && isLt2M;
+            }
+        }
+    })
+</script>
+</html>

@@ -1,0 +1,138 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>后台管理系统</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <link rel="stylesheet" href="css/home.css">
+    <script src="js/vue.js"></script>
+    <script src="js/axios-0.18.0.js"></script>
+    <script src="element-ui/lib/index.js"></script>
+    <link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+    <link rel="shortcut icon" href="./img/favicon.ico" type="image/x-icon" />
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin" id="app">
+    <div class="layui-header" style="background-color: #20222A">
+        <div class="layui-logo"
+             style="background-color: #393D49;color: white;height: 210px;border-bottom: 1px solid white">
+            <div style="background-color: #393D49;color: #009E94;font-weight: bolder">学生管理系统</div>
+                <img  src="./img/admin.jpg"
+                     style="width: 90px;height: 90px" class="layui-nav-img">
+            <div style="font-size: 10px;padding-right: 10px" v-model="userInfo">
+                欢迎{{userInfo.name}}!
+            </div>
+        </div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <ul class="layui-nav layui-layout-left">
+
+            <li class="layui-nav-item">
+                <div id="scrollWrap" style="float: left">
+                    <ul id="scrollMsg">
+                        <li><a class="scrollText" href="#"><i
+                                class="layui-icon layui-icon-speaker"></i>蓝朽工作室</a>
+                        </li>
+                    </ul>
+                </div>
+                <div id="time"></div>
+            </li>
+        </ul>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item"><a href="" id="refresh">
+                <i class="layui-icon layui-icon-refresh"></i></a>
+            </li>
+            <li class="layui-nav-item">
+                    <img src="img/admin.jpg" class="layui-nav-img">
+                    <span v-model="userInfo">{{userInfo.name}}</span>
+            </li>
+            <li class="layui-nav-item"><a href="login.html" onclick="clearCookie()" id="logout" @click="loginOut"><i
+                    class="layui-icon layui-icon-logout"></i>退出</a></li>
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black" style="padding-top: 150px">
+        <div class="layui-side-scroll">
+            <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                <li class="layui-nav-item" id="userManage" style="text-align: center">
+                    <a href="#" data-url="http://localhost:8080/StuHwManage/HwUpload.html" data-id="1" data-title="提交作业" class="site-demo-active"
+                       data-type="tabAdd">
+                        <i class="layui-icon layui-icon-read"></i>提交作业
+                    </a>
+                </li>
+                <li class="layui-nav-item"  id="alert" style="text-align: center">
+                    <a href="#" data-url="http://localhost:8080/StuHwManage/Alter.html" data-id="2" data-title="修改密码" class="site-demo-active"
+                       data-type="tabAdd">
+                        <i class="layui-icon layui-icon-star"></i>修改密码
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body"
+         style="background: url(img/bodyBg.jpg) no-repeat ;background-size: 100% 100%    ">
+        <!-- 内容主体区域 -->
+        <div class="layui-tab layui-tab-card" lay-filter="demo" lay-allowclose="true" style="">
+            <ul class="layui-tab-title" style="background-color: rgba(255,255,255,0.1)">
+            </ul>
+            <div class="layui-tab-content" style="height:660px">
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="js/jquery-3.3.1.js"></script>
+<script src="layui/layui.js"></script>
+<script src="js/home.js"></script>
+<style>
+.copyrights{text-indent:-9999px;height:0;line-height:0;font-size:0;overflow:hidden;}
+</style>
+<script>
+    new Vue({
+        el:"#app",
+        mounted(){
+            //当页面加载完成后发送异步请求，获取数据
+            this.FindUser();
+        },
+        methods:{
+            //修改密码
+            handleClose(done) {
+                this.$confirm('确认关闭？')
+                    .then(_ => {
+                        done();
+                    })
+                    .catch(_ => {});
+            },
+            //退出登录
+            loginOut(){
+                axios({
+                    method:"get",
+                    url:"http://localhost:8080/StuHwManage/Hw/loginOut"
+                })
+                this.$message('退出登录');
+                axios({
+                    method:"get",
+                    url:"http://localhost:8080/StuHwManage/login.html"
+                })
+            },
+            //请求用户数据
+          FindUser(){
+              axios({
+                  method:"get",
+                  url:"http://localhost:8080/StuHwManage/Hw/FindUser"
+              }).then(resp=>{
+                  this.userInfo=resp.data;
+              })
+          }
+        },
+        data(){
+            return{
+                userInfo:{},
+                dialogVisible: false
+            }
+        }
+    })
+</script>
+</body>
+</html>

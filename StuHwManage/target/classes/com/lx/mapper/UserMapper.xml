@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lx.mapper.UserMapper">
+    <resultMap id="userResultMap" type="user_Cscore">
+        <result property="stuId" column="id" />
+        <result property="stuName" column="name" />
+        <result property="stuScore" column="C_score" />
+    </resultMap>
+<!--    添加用户-->
+    <insert id="addUser">
+
+    </insert>
+    <!--    //增加分数-->
+    <update id="updateScore">
+        update stu_score set C_score=C_score+1 where id=#{id}
+    </update>
+<!--    减少分数-->
+    <update id="reduceScore">
+        update stu_score set C_score=C_score-1 where id=#{id}
+    </update>
+<!--    修改用户信息-->
+    <update id="updateUser">
+        update stu_user
+        <set>
+            <if test="user.name!=null and user.name!=''">
+                ,name=#{user.name}
+            </if>
+            <if test="user.username!=null and user.username!=''">
+                ,username=#{user.username}
+            </if>
+            <if test="user.password!=null and user.password!=''">
+                ,password=#{user.password}
+            </if>
+        </set>
+        <where>
+            id=#{user.id}
+        </where>
+    </update>
+<!--    改变状态的值-->
+    <update id="ChangeStatus">
+        update stu_user
+        set status=status+1
+        where id=#{id}
+    </update>
+    <!--    根据条件查询信息-->
+    <select id="selectByPageAndCondition" resultMap="userResultMap">
+        select stu_user.id,name,C_score
+        from stu_user,stu_score
+        <where>
+            stu_user.id = stu_score.id
+            <if test="user.stuId!=null and user.stuId!=''">
+                and stu_user.id=#{user.stuId}
+            </if>
+            <if test="user.stuName!=null and user.stuName!=''">
+                and name like #{user.stuName}
+            </if>
+            <if test="user.stuScore!=null and user.stuScore!=''">
+                and C_score=#{user.stuScore}
+            </if>
+        </where>
+        limit #{begin},#{size}
+    </select>
+<!--    根据条件查询记录数-->
+    <select id="selectTotalCountByCondition" resultType="java.lang.Integer">
+        select count(*)
+        from stu_user,stu_score
+        <where>
+            stu_user.id = stu_score.id
+            <if test="stuId!=null and stuId!=''">
+                and stu_user.id=#{stuId}
+            </if>
+            <if test="stuName!=null and stuName!=''">
+                and name like #{stuName}
+            </if>
+            <if test="stuScore!=null and stuScore!=''">
+                and C_score=#{stuScore}
+            </if>
+        </where>
+    </select>
+</mapper>

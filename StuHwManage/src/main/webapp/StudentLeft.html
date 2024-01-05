@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="css/StudentLeft.css">
+		<script src="js/jquery-1.9.1.min.js"></script>
+	</head>
+	<body>
+		<div class="nav">
+			<div class="nav-list">
+				<div class="nav-tit">
+					<a href="StudentScore.html" target="main">
+						<img src="images/archives-msg.png" alt="">
+						<span>操行分管理</span>
+					</a>
+				</div>
+				<div class="nav-tit">
+					<a href="StudentInfo.html" target="main">
+						<img src="images/personal-msg.png" alt="">
+						<span>用户管理</span>
+					</a>
+				</div>
+			</div>
+		</div>
+
+		<script>
+			$(document).ready(function(){
+				$('#personal').on('click',function(){
+					$('#personal-child').fadeToggle(300);
+				});
+				let aLi = $('#personal-child li');
+				aLi.on('click',function(){
+					$(this).addClass('active').siblings('li').removeClass('active');
+				})
+			});
+		</script>
+	</body>
+</html>
