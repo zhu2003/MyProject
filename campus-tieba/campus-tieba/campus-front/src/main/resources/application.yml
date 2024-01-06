@@ -1,0 +1,45 @@
+server:
+  port: 8888
+
+spring:
+  servlet:
+    # 上传的文件大小限制
+    multipart:
+      maxFileSize: 10MB
+      maxRequestSize: 10MB
+  # redis配置
+  redis:
+    host: localhost
+    port: 6379
+    #password: 123456
+    database: 0 #默认连接0号数据库
+    jedis:
+      # jedis连接池配置
+      pool:
+        max-active: 8 #最大连接数
+        max-wait: 1ms #等待时间
+        max-idle: 4 #最大空闲时间连接数
+        min-idle: 0 #最小空闲时间连接数
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      driverClassName: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://127.0.0.1:3306/campus_tieba?serverTimezone=UTC
+      username: root
+      password: root
+mybatis-plus:
+  configuration:
+    mapUnderscoreToCamelCase: true # 驼峰命名
+    logImpl: org.apache.ibatis.logging.stdout.StdOutImpl
+  typeAliasesPackage: com.lx.entity
+  mapper-locations: classpath:/mapper/*.xml # mapper.xml位置
+  globalConfig:
+    dbConfig:
+      logicDeleteField: deleted
+      logicDeleteValue: 1
+      logicNotDeleteValue: 0
+      tablePrefix: campus_
+
+upload:
+  # 保存图片资源的路径
+  filePath: D:\desktop\Code\backend-project\campus-tieba\campus-front\src\main\resources\static\image
